@@ -5,21 +5,22 @@ def main():
 
     
     print(f"running expense")
+    expense_file_path = 'expenses.csv'
 
 
    
     # Get user input for expense
     
     expense = get_user_expense()
-    print(expense)
+    
     # Write their expense into a file.
-    save_user_expense()
+    save_expense_to_file(expense, expense_file_path)
 
     # Read the file and summarize expenses.
-    summarize_user_expense()
+    summarize_user_expense(expense_file_path)
 
     
-
+ 
 
 def get_user_expense():
     print(f" Get user expense")
@@ -62,17 +63,28 @@ def get_user_expense():
 
 
         
+     
+
+def save_expense_to_file(expense: Expense, expense_file_path):
+    print(f" Save user expense: {expense} to {expense_file_path}")
+    with open(expense_file_path, 'a') as f:
+        f.write(f'{expense.name},{expense.amount},{expense.category}\n')
     
 
-def save_user_expense():
-    print(f" Save user expense")
-    
-
-def summarize_user_expense():
+def summarize_user_expense(expense_file_path):
     print(f" Summarize user expense")
-   
+    expenses = []
+    with open(expense_file_path, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            stripped_line = line.strip()
+            expense_name, expense_amount, expense_category = stripped_line.split(',')
+            line_expense = Expense(name=expense_name, amount=float(expense_amount), category=expense_category)
 
+            print(line_expense)
+            expenses.append(line_expense)
+        print(expenses)
 
 
 if __name__ == "__main__":
-    main()
+    main() 
